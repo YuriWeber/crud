@@ -2,7 +2,10 @@ import React from "react";
 
 function Login() {
     return (
-        <a href="/">Login</a>
+        <div className="vh-100 vw-100 d-flex align-items-center justify-content-center" 
+        id="container-login">
+            <a href="/">Login</a>
+        </div>
     )
 }
 

@@ -3,8 +3,10 @@ import React from "react";
 function Gerenciar() {
     return (
         <>
-            <p>Gerenciar</p>
-            <a href="/">Main</a>
+            <div>
+                <p>Gerenciar</p>
+                <a href="/">Main</a>
+            </div>
         </>
     )
 }

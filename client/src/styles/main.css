@@ -1,0 +1,10 @@
+body,
+* {
+  font-family: "Oxygen", sans-serif;
+  background-color: rgb(219, 238, 255);
+}
+
+html,
+body {
+  height: 100%;
+}
