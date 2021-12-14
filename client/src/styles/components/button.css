@@ -1,0 +1,29 @@
+.btn {
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(var(--dark-btn));
+  padding: 5px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: rgb(var(--font));
+  transition: 200ms;
+}
+
+.btn:hover {
+  background-color: rgb(var(--dark-btn-hover));
+}
+
+.btn-login-tab {
+  border-radius: 5px 0 0 0;
+  width: 50%;
+}
+
+.btn-register-tab {
+  border-radius: 0 5px 0 0;
+  width: 50%;
+}
+
+.selected-tab {
+  background-color: rgb(var(--selected-tab));
+}

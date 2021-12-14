@@ -1,0 +1,20 @@
+label {
+  margin-bottom: 2px;
+  margin-left: 2px;
+  font-size: 1.1rem;
+  color: rgb(var(--font));
+}
+
+.input {
+  margin-bottom: 10px;
+  font-size: 1rem;
+  color: rgb(var(--font));
+  background-color: rgb(var(--light-bg-v2));
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  padding: 0 5px 3px 5px;
+}
+
+.input-name {
+}
