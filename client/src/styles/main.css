@@ -6,10 +6,10 @@ body,
 html,
 body {
   background-color: rgb(var(--light-bg-v1));
-  height: 100%;
 }
 
 body {
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;

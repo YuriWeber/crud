@@ -1,0 +1,9 @@
+.main-btns {
+  display: flex;
+}
+
+h1 {
+  margin-bottom: 30px;
+  font-size: 2rem;
+  font-weight: bold;
+}

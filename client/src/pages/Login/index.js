@@ -1,8 +1,21 @@
 import React from "react";
 import "../../styles/pages/login.css"
+import { useNavigate } from "react-router-dom"
 
 function Login() {
-    const handleTab = (event, selectedTabClass) => {
+    const navigate = useNavigate()
+
+    const LoginButton = () => {
+        console.log("[LoginButton]")
+        navigate("/")
+    }
+
+    const RegisterButton = () => {
+        console.log("[RegisterButton]")
+        navigate("/")
+    }
+
+    const handleTabChange = (event, selectedTabClass) => {
         console.log("[handleTab]")
         const selectedTab = event.target
         const elementClass = "selected-tab"
@@ -31,11 +44,11 @@ function Login() {
             <div className="container-tab">
                 <button 
                     className="btn btn-login-tab selected-tab"
-                    onClick={event => (handleTab(event, "btn-login-tab"))}>
+                    onClick={event => (handleTabChange(event, "btn-login-tab"))}>
                         Entrar</button>
                 <button 
                     className="btn btn-register-tab"
-                    onClick={event => (handleTab(event, "btn-register-tab"))}>
+                    onClick={event => (handleTabChange(event, "btn-register-tab"))}>
                         Cadastrar</button>
             </div>
             <div className="container-form">
@@ -46,7 +59,10 @@ function Login() {
                         <label htmlFor="password">Senha: </label>
                         <input type="password" id="login-password" name="password" className="input input-password" maxLength={20} require="true"></input>
                     </div>
-                    <button type="submit" className="btn btn-submit">Entrar</button>
+                    <button type="submit" className="btn btn-submit"
+                        onClick={() => (LoginButton())}>
+                        Entrar
+                    </button>
                 </form>
                 <form className="form-register">
                     <div className="input-container">
@@ -57,7 +73,10 @@ function Login() {
                         <label htmlFor="pass-confirm">Confirmar senha: </label>
                         <input type="password" id="reg-password-confirm" name="password-confirm" className="input input-password-confirm" maxLength={20} require="true"></input>
                     </div>
-                    <button type="submit" className="btn btn-submit">Cadastrar</button>
+                    <button type="submit" className="btn btn-submit"
+                        onClick={() => (RegisterButton())}>
+                        Cadastrar
+                    </button>
                 </form>
             </div>
         </div>

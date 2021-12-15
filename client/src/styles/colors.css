@@ -1,7 +1,9 @@
 :root {
   --light-bg-v1: 219, 238, 255;
   --light-bg-v2: 230, 255, 255;
-  --dark-bg: 164, 154, 218;
+  --dark-bg-v1: 164, 154, 218;
+  --dark-bg-v1-hover: 184, 174, 238;
+  --dark-bg-v2: 64, 54, 118;
   --dark-btn: 191, 124, 236;
   --selected-tab: 161, 94, 206;
   --dark-btn-hover: 221, 154, 255;

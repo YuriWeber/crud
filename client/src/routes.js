@@ -3,15 +3,15 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 import Main from './pages/Main';
 import Login from './pages/Login';
-import Gerenciar from './pages/Gerenciar';
+import Manage from './pages/Manage';
 
 function Router() {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Main/>}/>
-                <Route path="login" element={<Login/>}/>
-                <Route path="gerenciar" element={<Gerenciar/>}/>
+                <Route path="conectar" element={<Login/>}/>
+                <Route path="gerenciar" element={<Manage/>}/>
             </Routes>
         </BrowserRouter>
     )
