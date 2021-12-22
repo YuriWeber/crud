@@ -21,5 +21,18 @@ module.exports = {
             if (data.password.includes(i)) {return {validate: false, error: "invalidChar"}}
         }
         return {validate: true}
+    },
+
+    CheckDataLogin: (data) => {
+        if (data === undefined) {
+            return {validate: false, error: "emptyFields"}
+        }
+        if (!("name" in data && "password" in data)) {
+                return {validate: false, error: "emptyFields"}
+        }
+        if (data.name === "" || data.password === "") {
+            return {validate: false, error: "emptyFields"}
+        }
+        return {validate: true}
     }
 }

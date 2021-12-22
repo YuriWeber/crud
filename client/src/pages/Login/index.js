@@ -30,7 +30,11 @@ function Login() {
 
     // envia dados para o backend e ativa avisos caso necessario
     const LoginButton = () => {
-        navigate("/")
+        Axios.post("http://localhost:3001/login", {
+            valuesLogin: valuesLogin,
+        }).then((response) => {
+            ShowError(response.data)
+        })
     }
 
     // envia dados para o backend e ativa avisos caso necessario
@@ -65,6 +69,10 @@ function Login() {
                 break;
             case "invalidChar":
                 element =  document.querySelector(".pass-invalid-warning").classList
+                EnableElement(element)
+                break;
+            case "usedName":
+                element =  document.querySelector(".name-used-warning").classList
                 EnableElement(element)
                 break;
             default: 
