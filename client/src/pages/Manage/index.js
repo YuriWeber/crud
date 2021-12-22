@@ -5,7 +5,6 @@ import "../../styles/pages/manage.css"
 function Manage() {
     const navigate = useNavigate()
     const HomeButton = () => {
-        console.log("[HomeButton]")
         navigate("/")
     }
 

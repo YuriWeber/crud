@@ -1,22 +1,94 @@
-import React from "react";
+import React, { useState } from "react";
 import "../../styles/pages/login.css"
 import { useNavigate } from "react-router-dom"
+import Axios from "axios"
 
 function Login() {
     const navigate = useNavigate()
 
+    const [valuesLogin, setValuesLogin] = useState()
+
+    const [valuesRegister, setValuesRegister] = useState()
+
+    // adição e remoção de uma classe ao elemento recebido
+    const EnableElement = (element) => {
+        if (element.contains("disable")) {
+            element.remove("disable")
+            element.add("enable")
+        }
+    }
+
+    // ocultar todos avisos
+    const DisableWarnings = () => {
+        document.querySelectorAll(".warning").forEach(element => {
+            if (element.classList.contains("enable")) {
+                element.classList.remove("enable")
+                element.classList.add("disable")
+            }
+        })
+    }
+
+    // envia dados para o backend e ativa avisos caso necessario
     const LoginButton = () => {
-        console.log("[LoginButton]")
         navigate("/")
     }
 
+    // envia dados para o backend e ativa avisos caso necessario
     const RegisterButton = () => {
-        console.log("[RegisterButton]")
-        navigate("/")
+        Axios.post("http://localhost:3001/register", {
+            valuesRegister: valuesRegister,
+        }).then((response) => {
+            ShowError(response.data)
+        })
     }
 
-    const handleTabChange = (event, selectedTabClass) => {
-        console.log("[handleTab]")
+    // ativa o elemento de aviso de acordo com o erro retornado pelo back
+    const ShowError = (error) => {
+        DisableWarnings();
+        let element
+        switch (error) {
+            case "emptyFields":
+                element = document.querySelector(".empty-field-warning").classList
+                EnableElement(element)
+                break;
+            case "differentPassword":
+                element =  document.querySelector(".pass-invalid-warning").classList
+                EnableElement(element)
+                break;
+            case "shortName":
+                element =  document.querySelector(".name-short-warning").classList
+                EnableElement(element)
+                break;
+            case "shortPassword":
+                element =  document.querySelector(".pass-weak-warning").classList
+                EnableElement(element)
+                break;
+            case "invalidChar":
+                element =  document.querySelector(".pass-invalid-warning").classList
+                EnableElement(element)
+                break;
+            default: 
+                console.log("[Invalid Error]")
+                break;
+        }
+    }
+
+    const ChangeValuesLogin =  (value) => {
+        setValuesLogin(preValues => ({
+            ...preValues,
+            [value.target.name]: value.target.value
+        }))
+    }
+
+    const ChangeValuesRegister = (value) => {
+        setValuesRegister(preValues => ({
+            ...preValues,
+            [value.target.name]: value.target.value
+        }))
+    }
+
+    // troca de aba
+    const HandleTabChange = (event, selectedTabClass) => {
         const selectedTab = event.target
         const elementClass = "selected-tab"
         const login = document.querySelector(".form-login").style
@@ -34,9 +106,12 @@ function Login() {
                 login.display = "none"
                 register.display = "flex"
                 break;
+            default:
+                throw new Error("Invalid case");
         }
         selectedTab.classList.add(elementClass)
         currentTab.classList.remove(elementClass)
+        DisableWarnings()
     }
 
     return (
@@ -44,40 +119,60 @@ function Login() {
             <div className="container-tab">
                 <button 
                     className="btn btn-login-tab selected-tab"
-                    onClick={event => (handleTabChange(event, "btn-login-tab"))}>
+                    onClick={event => (HandleTabChange(event, "btn-login-tab"))}>
                         Entrar</button>
                 <button 
                     className="btn btn-register-tab"
-                    onClick={event => (handleTabChange(event, "btn-register-tab"))}>
+                    onClick={event => (HandleTabChange(event, "btn-register-tab"))}>
                         Cadastrar</button>
             </div>
             <div className="container-form">
-                <form className="form-login">
+                <p className="empty-field-warning warning disable"><i className="fas fa-exclamation-triangle"></i> Preencha todos os campos!</p>
+                <div className="form-login">
                     <div className="input-container">
                         <label htmlFor="name">Nome: </label>
-                        <input type="text" id="login-name" name="name" className="input input-name" maxLength={60} require="true"></input>
+                        <input type="text" id="login-name" name="name" 
+                            className="input input-name" 
+                            maxLength={60}
+                            onChange={ChangeValuesLogin}></input>
                         <label htmlFor="password">Senha: </label>
-                        <input type="password" id="login-password" name="password" className="input input-password" maxLength={20} require="true"></input>
+                        <input type="password" id="login-password" name="password" 
+                            className="input input-password" 
+                            maxLength={20}
+                            onChange={ChangeValuesLogin}></input>
                     </div>
-                    <button type="submit" className="btn btn-submit"
-                        onClick={() => (LoginButton())}>
+                    <button className="btn btn-submit"
+                        onClick={LoginButton}>
                         Entrar
                     </button>
-                </form>
-                <form className="form-register">
+                </div>
+                <div className="form-register">
+                    <p className="name-used-warning warning disable"><i className="fas fa-exclamation-triangle"></i> Nome já usado!</p>
+                    <p className="name-short-warning warning disable"><i className="fas fa-exclamation-triangle"></i> Nome pequeno!</p>
                     <div className="input-container">
                         <label htmlFor="name">Nome: </label>
-                        <input type="text" name="name" id="reg-name" className="input input-name" maxLength={60} require="true"></input>
+                        <input type="text" name="name" id="reg-name" 
+                            className="input input-name" 
+                            maxLength={60}
+                            onChange={ChangeValuesRegister}></input>
+                        <p className="pass-invalid-warning warning disable"><i className="fas fa-exclamation-triangle"></i> Senha inválida ou diferente!</p>
+                        <p className="pass-weak-warning warning disable"><i className="fas fa-exclamation-triangle"></i> Senha fraca!</p>
                         <label htmlFor="password">Senha: </label>
-                        <input type="password" id="reg-password" name="password" className="input input-password" maxLength={20} require="true"></input>
-                        <label htmlFor="pass-confirm">Confirmar senha: </label>
-                        <input type="password" id="reg-password-confirm" name="password-confirm" className="input input-password-confirm" maxLength={20} require="true"></input>
+                        <input type="password" id="reg-password" name="password" 
+                            className="input input-password" 
+                            maxLength={20}
+                            onChange={ChangeValuesRegister}></input>
+                        <label htmlFor="passwordConfirm">Confirmar senha: </label>
+                        <input type="password" id="reg-password-confirm" name="passwordConfirm" 
+                            className="input input-password-confirm" 
+                            maxLength={20}
+                            onChange={ChangeValuesRegister}></input>
                     </div>
-                    <button type="submit" className="btn btn-submit"
-                        onClick={() => (RegisterButton())}>
+                    <button className="btn btn-submit"
+                        onClick={RegisterButton}>
                         Cadastrar
                     </button>
-                </form>
+                </div>
             </div>
         </div>
     )

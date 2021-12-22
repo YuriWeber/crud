@@ -5,12 +5,10 @@ import { useNavigate } from "react-router-dom"
 function Main(){
     const navigate = useNavigate()
     const LogoutButton = () => {
-        console.log("[LogoutButton]")
         navigate("/conectar")
     }
 
     const ManageButton = () => {
-        console.log("[ManageButton]")
         navigate("/gerenciar")
     }
 
