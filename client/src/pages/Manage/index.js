@@ -1,12 +1,30 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"
 import "../../styles/pages/manage.css"
+import Axios from "axios"
+import CreateRow from "./row.js"
 
 function Manage() {
+    const [users, setUsers] = useState([])
+
     const navigate = useNavigate()
     const HomeButton = () => {
         navigate("/")
     }
+
+    const GetData = () => {
+        return Axios.post("http://localhost:3001/manage")
+            .then((response) => {
+                return response.data
+            })
+    }
+
+    useEffect(() => {
+        async function Setter() {
+            setUsers(await GetData())
+        }
+        Setter()
+    }, [])
 
     return (
         <div className="container manage">
@@ -26,54 +44,7 @@ function Manage() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td className="id-column">1</td>
-                                <td className="name-column">Frederico</td>
-                                <td className="date-column">23/11/2021</td>
-                                <td className="role-column">User</td>
-                                <td className="edit-row">
-                                    <button className="btn btn-edit">
-                                        <i className="far fa-edit"></i>
-                                    </button>
-                                </td>
-                                <td className="edit-row">
-                                    <button className="btn btn-delete">
-                                        <i className="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="id-column">2</td>
-                                <td className="name-column">Joaquin</td>
-                                <td className="date-column">12/03/2020</td>
-                                <td className="role-column">Master</td>
-                                <td className="edit-row">
-                                    <button className="btn btn-edit">
-                                        <i className="far fa-edit"></i>
-                                    </button>
-                                </td>
-                                <td className="edit-row">
-                                    <button className="btn btn-delete">
-                                        <i className="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="id-column">5</td>
-                                <td className="name-column">Eden Lukkis</td>
-                                <td className="date-column">12/05/2020</td>
-                                <td className="role-column">User</td>
-                                <td className="edit-row">
-                                    <button className="btn btn-edit">
-                                        <i className="far fa-edit"></i>
-                                    </button>
-                                </td>
-                                <td className="edit-row">
-                                    <button className="btn btn-delete">
-                                        <i className="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                            {users.map(user => (<CreateRow user={user} key={user.iduser}/>))}
                         </tbody>
                     </table>
                 </div>

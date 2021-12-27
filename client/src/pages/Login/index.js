@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import "../../styles/pages/login.css"
-import { useNavigate } from "react-router-dom"
 import Axios from "axios"
 
 function Login() {
-    const navigate = useNavigate()
 
     const [valuesLogin, setValuesLogin] = useState()
 
@@ -30,6 +28,7 @@ function Login() {
 
     // envia dados para o backend e ativa avisos caso necessario
     const LoginButton = () => {
+        DisableWarnings()
         Axios.post("http://localhost:3001/login", {
             valuesLogin: valuesLogin,
         }).then((response) => {
@@ -39,6 +38,7 @@ function Login() {
 
     // envia dados para o backend e ativa avisos caso necessario
     const RegisterButton = () => {
+        DisableWarnings()
         Axios.post("http://localhost:3001/register", {
             valuesRegister: valuesRegister,
         }).then((response) => {
@@ -73,6 +73,10 @@ function Login() {
                 break;
             case "usedName":
                 element =  document.querySelector(".name-used-warning").classList
+                EnableElement(element)
+                break;
+            case "invalidAccount":
+                element =  document.querySelector(".invalid-account-warning").classList
                 EnableElement(element)
                 break;
             default: 
@@ -136,6 +140,7 @@ function Login() {
             </div>
             <div className="container-form">
                 <p className="empty-field-warning warning disable"><i className="fas fa-exclamation-triangle"></i> Preencha todos os campos!</p>
+                <p className="invalid-account-warning warning disable"><i className="fas fa-exclamation-triangle"></i> Nome e/ou senha inválidos!</p>
                 <div className="form-login">
                     <div className="input-container">
                         <label htmlFor="name">Nome: </label>

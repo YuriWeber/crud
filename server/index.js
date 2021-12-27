@@ -3,7 +3,8 @@ const app = express();
 const mysql = require("mysql");
 const cors = require("cors")
 const bcrypt = require('bcrypt')
-const tools = require("./tools.js")
+const tools = require("./tools.js");
+const { application } = require("express");
 
 const db = mysql.createPool({
     host: "localhost",
@@ -58,14 +59,33 @@ app.post("/login", (req, res) => {
            if (result.length >= 1) {
                 const dbData = result[0]
     
-                console.log(await bcrypt.compare(password, dbData.password))
+                const connect = await bcrypt.compare(password, dbData.password)
+
+                if (connect) {
+                    console.log("Conta valida")
+                }
+                else {
+                    res.send("invalidAccount")
+                }
             } else {
-                res.send()
+                res.send("invalidAccount")
             }
         })
     } else {
         res.send(validateLogin.error)
     }
+})
+
+app.post("/manage", (req, res) => {
+    const SQL = "SELECT iduser, name, dt_created, role FROM users"
+    db.query(SQL, (err, result) => {
+        if (err) {
+            console.log(err)
+        }
+        else {
+            res.send(result)
+        }
+    })
 })
 
 app.listen(3001, () => {
