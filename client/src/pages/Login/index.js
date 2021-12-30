@@ -32,7 +32,7 @@ function Login() {
         Axios.post("http://localhost:3001/login", {
             valuesLogin: valuesLogin,
         }).then((response) => {
-            ShowError(response.data)
+            ShowMessage(response.data)
         })
     }
 
@@ -42,12 +42,12 @@ function Login() {
         Axios.post("http://localhost:3001/register", {
             valuesRegister: valuesRegister,
         }).then((response) => {
-            ShowError(response.data)
+            ShowMessage(response.data)
         })
     }
 
     // ativa o elemento de aviso de acordo com o erro retornado pelo back
-    const ShowError = (error) => {
+    const ShowMessage = (error) => {
         DisableWarnings();
         let element
         switch (error) {
@@ -77,6 +77,10 @@ function Login() {
                 break;
             case "invalidAccount":
                 element =  document.querySelector(".invalid-account-warning").classList
+                EnableElement(element)
+                break;
+            case "success":
+                element =  document.querySelector(".success-warning").classList
                 EnableElement(element)
                 break;
             default: 
@@ -162,6 +166,7 @@ function Login() {
                 <div className="form-register">
                     <p className="name-used-warning warning disable"><i className="fas fa-exclamation-triangle"></i> Nome já usado!</p>
                     <p className="name-short-warning warning disable"><i className="fas fa-exclamation-triangle"></i> Nome pequeno!</p>
+                    <p className="success-warning warning disable">Registro completo!</p>
                     <div className="input-container">
                         <label htmlFor="name">Nome: </label>
                         <input type="text" name="name" id="reg-name" 

@@ -12,6 +12,11 @@
   color: rgb(var(--warning));
   margin-bottom: 10px;
   margin-left: 2px;
+  font-weight: bold;
+}
+
+.success-warning {
+  color: rgb(var(--success));
 }
 
 .disable {

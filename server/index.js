@@ -33,10 +33,14 @@ app.post("/register", (req, res) => {
                 else {            
                     const password = await bcrypt.hash(data.password, 10)
                     
-                    const SQL = "INSERT INTO users (name, password, role) VALUES (?, ?, ?)"
+                    const SQL = "INSERT INTO users (name, password, access) VALUES (?, ?, ?)"
                     
                     db.query(SQL, [name, password, "user"], (err, result) => {
-                        console.log(err)
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            res.send("success")
+                        }
                     })
                 }
             }
@@ -76,8 +80,8 @@ app.post("/login", (req, res) => {
     }
 })
 
-app.post("/manage", (req, res) => {
-    const SQL = "SELECT iduser, name, dt_created, role FROM users"
+app.get("/manage", (req, res) => {
+    const SQL = "SELECT iduser, name, dt_created, access FROM users"
     db.query(SQL, (err, result) => {
         if (err) {
             console.log(err)
@@ -85,6 +89,30 @@ app.post("/manage", (req, res) => {
         else {
             res.send(result)
         }
+    })
+})
+
+app.delete("/delete/:id", (req, res) => {
+    const { id } = req.params
+    const SQL = "DELETE FROM users WHERE iduser = ?"
+
+    db.query(SQL, [id], (err, result) => {
+        if (err) console.log(err);
+        else res.send(result)
+    })
+})
+
+app.put("/update", (req, res) => {
+    const { id } = req.body
+
+    const { name } = req.body.updatedValues
+    const { access } = req.body.updatedValues
+
+    const SQL =  "UPDATE users SET name = ?, access = ? WHERE iduser = ?"
+
+    db.query(SQL, [name, access, id], (err, result) => {
+        if (err) console.log(err);
+        else res.send(result);
     })
 })
 

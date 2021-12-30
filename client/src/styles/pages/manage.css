@@ -33,16 +33,20 @@ table {
   width: 150px;
 }
 
+.access-column {
+  text-align: center;
+  width: 100px;
+}
+
 .edit-row {
   text-align: center;
   width: 40px;
 }
 
 .name-head {
-  text-align: left;
-  padding-left: 5px;
+  text-align: center;
 }
 
-.role-column {
+.access-column {
   text-align: center;
 }

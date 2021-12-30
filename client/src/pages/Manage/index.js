@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom"
 import "../../styles/pages/manage.css"
 import Axios from "axios"
@@ -12,19 +12,40 @@ function Manage() {
         navigate("/")
     }
 
+    const UsersReload = useCallback(() => {
+        async function Setter() {
+            setUsers(await GetData())
+        }
+        Setter()
+    }, [])
+
     const GetData = () => {
-        return Axios.post("http://localhost:3001/manage")
+        return Axios.get("http://localhost:3001/manage")
             .then((response) => {
                 return response.data
             })
     }
 
     useEffect(() => {
-        async function Setter() {
-            setUsers(await GetData())
+        UsersReload()
+    }, [ UsersReload ])
+
+    const UserDelete = (id) => {
+        Axios.delete(`http://localhost:3001/delete/${id}`)
+            .then(UsersReload)
+    }
+
+    const UserUpdate = (id, updatedValues) => {
+        if (id !== undefined && updatedValues !== undefined) {
+            Axios.put("http://localhost:3001/update", {
+                id,
+                updatedValues
+            }).then(() => {
+                UsersReload()
+            })
         }
-        Setter()
-    }, [])
+        
+    }
 
     return (
         <div className="container manage">
@@ -39,12 +60,12 @@ function Manage() {
                                 <th className="id-head">ID</th>
                                 <th className="name-head">NOME</th>
                                 <th className="date-head">DATA DE CRIAÇÃO</th>
-                                <th className="role-head">CARGO</th>
+                                <th className="access-head">ACESSO</th>
                                 <th className="edit-head" colSpan={2}>EDITAR</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map(user => (<CreateRow user={user} key={user.iduser}/>))}
+                            {users.map(user => (<CreateRow user={user} key={user.iduser} UserDelete={UserDelete} UserUpdate={UserUpdate}/>))}
                         </tbody>
                     </table>
                 </div>
