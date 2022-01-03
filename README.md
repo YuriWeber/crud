@@ -36,4 +36,3 @@ Sistema com login, registro e gerenciamento de contas de usuários.
       bcrypt
     MySQL
 
-Projeto com intuito de aprender React e Node.js.
