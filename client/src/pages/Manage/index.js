@@ -5,6 +5,7 @@ import Axios from "axios"
 import CreateRow from "./row.js"
 import authorization from "../../authorization";
 import Loading from "../loading"
+import api from "../../api"
 
 function Manage() {
     const [users, setUsers] = useState([])
@@ -13,11 +14,16 @@ function Manage() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        authorization().then(authorize => {
+        authorization().then(async authorize => {
             if (!authorize.auth) {
               return navigate("/")
             }
+            const token = JSON.parse(localStorage.getItem("user"));
 
+            const access = await api.post("http://localhost:3001/access", { token: token })
+            if (!access.data) {
+                return navigate("/")
+            }
             setLoading(false)
         })
     }, [navigate])

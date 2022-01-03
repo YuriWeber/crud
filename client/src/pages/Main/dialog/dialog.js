@@ -5,28 +5,30 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 
 export default function FormDialog(props) {
-  const [access, setAccess] = React.useState(props.values.access);
-  const [name, setName] = React.useState(props.values.name);
+  const [name, setName] = React.useState(props.name);
+  const [password, setPassword] = React.useState("");
+  const [passwordConfirm, setPasswordConfirm] = React.useState("");
 
   const handleClose = () => {
     props.setOpen(false);
-  };
-
-  const handleChangeAccess = (event) => {
-    setAccess(event.target.value);
   };
 
   const handleChangeName = (event) => {
     setName(event.target.value);
   };
 
+  const handleChangePassword = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleChangePasswordConfirm = (event) => {
+    setPasswordConfirm(event.target.value);
+  };
+
   const updateValues = () => {
-    props.setUpdatedValues({ name: name, access: access });
-    handleClose();
+    props.UpdateUser(name, password, passwordConfirm)
   };
 
   return (
@@ -45,17 +47,30 @@ export default function FormDialog(props) {
           variant="standard"
           onChange={handleChangeName}
         />
-        <Select
-          labelId="demo-simple-select-label"
-          id="roleSelect"
-          value={access}
-          className="select"
-          label="Age"
-          onChange={handleChangeAccess}
-        >
-          <MenuItem value={"admin"}>admin</MenuItem>
-          <MenuItem value={"user"}>User</MenuItem>
-        </Select>
+        <TextField
+          autoFocus
+          margin="dense"
+          id="password"
+          label="Nova Senha"
+          type="password"
+          value={password}
+          inputProps={{ maxLength: 20 }}
+          fullWidth
+          variant="standard"
+          onChange={handleChangePassword}
+        />
+        <TextField
+          autoFocus
+          margin="dense"
+          id="passwordConfirm"
+          label="Confirmar Senha"
+          type="password"
+          value={passwordConfirm}
+          inputProps={{ maxLength: 20 }}
+          fullWidth
+          variant="standard"
+          onChange={handleChangePasswordConfirm}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancelar</Button>

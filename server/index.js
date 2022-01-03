@@ -140,6 +140,49 @@ app.post("/authorization", VerifyJWT, (req, res) =>{
   res.send({auth: req.auth, user: {name: req.name, iduser: req.iduser}})
 })
 
+app.post("/access", VerifyJWT, (req, res) => {
+  const SQL = "SELECT * FROM users WHERE iduser = ?"
+
+  db.query(SQL, [req.iduser], (err, result) => {
+    const userData = result[0]
+    if (userData.access === "admin") {
+      res.send(true)
+    } else {
+      res.send(false)
+    }
+  })
+})
+
+app.put("/update-user", async (req, res) => {
+  const data = req.body
+  let SQL = ""
+
+  
+  if (data.password && data.password !== "") {
+    const validateUpdate = tools.CheckDataRegister(data)
+    if (validateUpdate.validate) {
+      const password = await bcrypt.hash(data.password, 10)
+      SQL = `UPDATE users SET name = '${data.name}', password = '${password}' WHERE iduser = ${data.iduser}`
+    } else return res.send({message: validateUpdate.error});
+
+
+  } else {
+    console.log("ASASDADASDA")
+    if (!data.name || data.name.length < 4) return res.send({message: "shortName"})
+    else SQL = `UPDATE users SET name = '${data.name}' WHERE iduser = ${data.iduser}`;
+  }
+
+  db.query(SQL, (err, result) => {
+    if (err) {
+      console.log(err)
+      return res.send({message: "updateFailed"})
+    } else {
+      const token = jwt.sign({iduser: data.iduser, name: data.name}, key, {expiresIn: "30d"})
+      return res.send({message: "success", token: token})
+    }
+  })
+})
+
 app.listen(3001, () => {
   console.log("3001");
 });
