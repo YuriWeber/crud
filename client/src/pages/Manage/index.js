@@ -3,11 +3,25 @@ import { useNavigate } from "react-router-dom"
 import "../../styles/pages/manage.css"
 import Axios from "axios"
 import CreateRow from "./row.js"
+import authorization from "../../authorization";
+import Loading from "../loading"
 
 function Manage() {
     const [users, setUsers] = useState([])
+    const [loading, setLoading] = useState(true)
 
     const navigate = useNavigate()
+
+    useEffect(() => {
+        authorization().then(authorize => {
+            if (!authorize.auth) {
+              return navigate("/")
+            }
+
+            setLoading(false)
+        })
+    }, [navigate])
+
     const HomeButton = () => {
         navigate("/")
     }
@@ -45,6 +59,10 @@ function Manage() {
             })
         }
         
+    }
+
+    if (loading) {
+        return <Loading/>
     }
 
     return (

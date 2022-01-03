@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import "../../styles/pages/login.css"
-import Axios from "axios"
+import api from "../../api"
+import { useNavigate } from "react-router-dom"
 
 function Login() {
 
     const [valuesLogin, setValuesLogin] = useState()
 
     const [valuesRegister, setValuesRegister] = useState()
+
+    const navigate = useNavigate()
 
     // adição e remoção de uma classe ao elemento recebido
     const EnableElement = (element) => {
@@ -26,23 +29,35 @@ function Login() {
         })
     }
 
+    // armazena dados do usuário e token
+    const StoreToken = (token) => {
+        api.defaults.headers.Authorization = token
+        return localStorage.setItem("user", JSON.stringify(token))
+    }
+
     // envia dados para o backend e ativa avisos caso necessario
     const LoginButton = () => {
         DisableWarnings()
-        Axios.post("http://localhost:3001/login", {
+        api.post("http://localhost:3001/login", {
             valuesLogin: valuesLogin,
         }).then((response) => {
-            ShowMessage(response.data)
+            const resData = response.data
+            if (resData.auth) {
+                StoreToken(resData.token)
+                navigate("/")
+            } else {
+                ShowMessage(resData.message)
+            }
         })
     }
 
     // envia dados para o backend e ativa avisos caso necessario
     const RegisterButton = () => {
         DisableWarnings()
-        Axios.post("http://localhost:3001/register", {
+        api.post("http://localhost:3001/register", {
             valuesRegister: valuesRegister,
         }).then((response) => {
-            ShowMessage(response.data)
+            ShowMessage(response.data.message)
         })
     }
 
@@ -109,6 +124,7 @@ function Login() {
         const elementClass = "selected-tab"
         const login = document.querySelector(".form-login").style
         const register = document.querySelector(".form-register").style
+        // caso tenha clicado na aba já visível
         if (selectedTab.classList.contains(elementClass)) { return }
         let currentTab
         switch (selectedTabClass) {
