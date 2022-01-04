@@ -20,11 +20,12 @@ Sistema com login, registro e gerenciamento de contas de usuários.
   
 ## Utilização
   ### Usuário comum
-    Registar com um nome e uma senha
-    Se conectar com a conta criada
+     Registar com um nome e uma senha
+     Se conectar com a conta criada
   ### Usuário administrador
-    Conectar com Nome: admin, Senha: admin (de preferencia deve ser alterado após o primeiro login)
-    Conectar com qualquer conta que tenha acesso de administrador (possível definir um usuário como administrador com outra conta de administrador)
+     Conectar com Nome: admin, Senha: admin (de preferencia deve ser alterado após o primeiro login)
+     Conectar com qualquer conta que tenha acesso de administrador (possível definir um usuário como 
+    administrador com outra conta de administrador)
 
 
 ## Tecnologias:
@@ -33,13 +34,15 @@ Sistema com login, registro e gerenciamento de contas de usuários.
     CSS,
     JavaScript,
     React
-      Material-UI
-      Axios
+      Material-UI,
+      Axios,
+      React-router
   ### BACK-END
     Node.js,
       express,
       mysql,
       nodemon,
-      bcrypt
+      bcrypt,
+      jsonwebtoken
     MySQL
 
