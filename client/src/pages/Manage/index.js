@@ -6,10 +6,12 @@ import CreateRow from "./row.js"
 import authorization from "../../authorization";
 import Loading from "../loading"
 import api from "../../api"
+import StoreToken from "../../StoreToken"
 
 function Manage() {
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(true)
+    const [user, setUser] = useState()
 
     const navigate = useNavigate()
 
@@ -24,6 +26,8 @@ function Manage() {
             if (!access.data) {
                 return navigate("/")
             }
+
+            setUser(authorize.user)
             setLoading(false)
         })
     }, [navigate])
@@ -55,7 +59,7 @@ function Manage() {
             .then(UsersReload)
     }
 
-    const UserUpdate = (id, updatedValues) => {
+    const UsersUpdate = (id, updatedValues) => {
         if (id !== undefined && updatedValues !== undefined) {
             Axios.put("http://localhost:3001/update", {
                 id,
@@ -66,6 +70,29 @@ function Manage() {
         }
         
     }
+
+    const UserUpdate = (name, password, passwordConfirm, access) => {
+        api.put("http://localhost:3001/update-user", {
+          name, 
+          password,
+          passwordConfirm,
+          access: access,
+          iduser: user.iduser
+        }).then(response => {
+          switch (response.data.message) {
+            case "updateFailed" :
+              console.log("Update Failed")
+              break
+            case "success":
+              StoreToken(response.data.token)
+              window.location.reload()
+              break;
+            default:
+              console.log("[Invalid Message]")
+              break;
+          }
+        })
+      }
 
     if (loading) {
         return <Loading/>
@@ -89,7 +116,7 @@ function Manage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map(user => (<CreateRow user={user} key={user.iduser} UserDelete={UserDelete} UserUpdate={UserUpdate}/>))}
+                            {users.map(item => (<CreateRow user={item} key={item.iduser} UserDelete={UserDelete} UsersUpdate={UsersUpdate} UserUpdate={user.iduser===item.iduser ? UserUpdate : undefined}/>))}
                         </tbody>
                     </table>
                 </div>

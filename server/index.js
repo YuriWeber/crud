@@ -118,7 +118,10 @@ app.delete("/delete/:id", (req, res) => {
 
   db.query(SQL, [id], (err, result) => {
     if (err) console.log(err);
-    else res.send(result);
+    else { 
+      CreateAdmin()
+      res.send(result)
+    }
   });
 });
 
@@ -132,7 +135,10 @@ app.put("/update", (req, res) => {
 
   db.query(SQL, [name, access, id], (err, result) => {
     if (err) console.log(err);
-    else res.send(result);
+    else {
+      CreateAdmin()
+      res.send(result)
+    }
   });
 });
 
@@ -162,14 +168,13 @@ app.put("/update-user", async (req, res) => {
     const validateUpdate = tools.CheckDataRegister(data)
     if (validateUpdate.validate) {
       const password = await bcrypt.hash(data.password, 10)
-      SQL = `UPDATE users SET name = '${data.name}', password = '${password}' WHERE iduser = ${data.iduser}`
+      SQL = `UPDATE users SET name = '${data.name}', password = '${password}', access = '${data.access}' WHERE iduser = ${data.iduser}`
     } else return res.send({message: validateUpdate.error});
 
 
   } else {
-    console.log("ASASDADASDA")
     if (!data.name || data.name.length < 4) return res.send({message: "shortName"})
-    else SQL = `UPDATE users SET name = '${data.name}' WHERE iduser = ${data.iduser}`;
+    else SQL = `UPDATE users SET name = '${data.name}', access = '${data.access}' WHERE iduser = ${data.iduser}`;
   }
 
   db.query(SQL, (err, result) => {
@@ -177,6 +182,7 @@ app.put("/update-user", async (req, res) => {
       console.log(err)
       return res.send({message: "updateFailed"})
     } else {
+      CreateAdmin()
       const token = jwt.sign({iduser: data.iduser, name: data.name}, key, {expiresIn: "30d"})
       return res.send({message: "success", token: token})
     }
@@ -185,7 +191,26 @@ app.put("/update-user", async (req, res) => {
 
 app.listen(3001, () => {
   console.log("3001");
+  CreateAdmin()
 });
+
+const CreateAdmin = () => {
+  const SQLSELECT = "SELECT * FROM users WHERE access = 'admin'"
+  
+  db.query(SQLSELECT, async (err, result) => {
+    if (err) return console.log("Select Error - CreateAdmin");
+    
+    if (result.length < 1) {
+      const name = "admin"
+      const password = await bcrypt.hash("admin", 10)
+      const SQLINSERT = "INSERT INTO users (name, password, access) VALUES (?, ?, 'admin')"
+
+      db.query(SQLINSERT, [name, password], (err, result) => {
+        if (err) return console.log("Insert Error - CreateAdmin" + err)
+      })
+    }
+  })
+}
 
 const UsedName = (name, callback) => {
   const SQL = "SELECT * FROM users WHERE name = ?";

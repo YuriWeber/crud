@@ -28,7 +28,7 @@ export default function FormDialog(props) {
   };
 
   const updateValues = () => {
-    props.UpdateUser(name, password, passwordConfirm)
+    props.UserUpdate(name, password, passwordConfirm)
   };
 
   return (

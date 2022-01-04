@@ -5,6 +5,7 @@ import authorization from "../../authorization";
 import Loading from "../loading"
 import FormDialog from "./dialog/dialog"
 import api from "../../api"
+import StoreToken from "../../StoreToken"
 
 function Main() {
   const navigate = useNavigate();
@@ -42,16 +43,12 @@ function Main() {
     }
   };
 
-  const StoreToken = token => {
-    api.defaults.headers.Authorization = token
-    return localStorage.setItem("user", JSON.stringify(token))
-  }
-
-  const UpdateUser = (name, password, passwordConfirm) => {
+  const UserUpdate = (name, password, passwordConfirm) => {
     api.put("http://localhost:3001/update-user", {
       name, 
       password,
       passwordConfirm,
+      access: "user",
       iduser: user.iduser
     }).then(response => {
       switch (response.data.message) {
@@ -59,7 +56,6 @@ function Main() {
           console.log("Update Failed")
           break
         case "success":
-          console.log("PASSOU")
           StoreToken(response.data.token)
           setOpen(false)
           window.location.reload()
@@ -77,7 +73,7 @@ function Main() {
 
   return (
     <>
-    <FormDialog open={open} setOpen={setOpen} name={user.name} UpdateUser={UpdateUser}/>
+    <FormDialog open={open} setOpen={setOpen} name={user.name} UserUpdate={UserUpdate}/>
     <div className="container">
       <div className="main-container">
         <div className="account-info">

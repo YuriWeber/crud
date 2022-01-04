@@ -1,19 +1,30 @@
 import React, { useState, useEffect, useCallback } from "react"
-import FormDialog from "./dialog/dialog"
+import FormDialogUsers from "./dialog/dialogUsers"
+import FormDialogUser from "./dialog/dialogUser"
 
 function CreateRow( props ) {
     const user = props.user
     const createdDate = user.dt_created.split("T")[0].split("-")
 
-    const [open, setOpen] = useState(false);
+    const [openUsers, setOpenUsers] = useState(false);
+    const [openUser, setOpenUser] = useState(false);
     const [updatedValues, setUpdatedValues] = useState()
-
+    
     const handleClickOpen = () => {
-        setOpen(true);
+        if (props.UserUpdate) setOpenUser(true)
+        else setOpenUsers(true)
     };
 
     const callUpdate = useCallback(() => {
-        props.UserUpdate(user.iduser, updatedValues)
+        if (props.UserUpdate) {
+            if (updatedValues) {
+                props.UserUpdate(updatedValues.name, updatedValues.password, updatedValues.passwordConfirm, updatedValues.access)
+            }
+        } else {
+            if (updatedValues) {
+                props.UsersUpdate(user.iduser, updatedValues)
+            }
+        }
     }, [props, updatedValues, user])
 
     useEffect(() => {
@@ -24,7 +35,12 @@ function CreateRow( props ) {
 
     return (
         <>
-            <FormDialog open={open} setOpen={setOpen} values={{name:user.name, access:user.access}} setUpdatedValues={setUpdatedValues}/>
+            {
+                !props.UserUpdate ? 
+                    <FormDialogUsers open={openUsers} setOpen={setOpenUsers} values={{name:user.name, access:user.access}} setUpdatedValues={setUpdatedValues}/>
+                    :
+                    <FormDialogUser open={openUser} setOpen={setOpenUser} values={{name:user.name, access:user.access}} setUpdatedValues={setUpdatedValues}/>
+            }
             <tr>
                 <td className="id-column">{user.iduser}</td>
                 <td className="name-column">{user.name}</td>
@@ -36,9 +52,15 @@ function CreateRow( props ) {
                     </button>
                 </td>
                 <td className="edit-row">
-                    <button className="btn btn-delete" onClick={() => (props.UserDelete(user.iduser))}>
-                        <i className="fas fa-trash"></i>
-                    </button>
+                    {
+                        !props.UserUpdate ?
+                            
+                            <button className="btn btn-delete" onClick={() => (props.UserDelete(user.iduser))}>
+                                <i className="fas fa-trash"></i>
+                            </button>
+                            :
+                            <div></div>
+                    }
                 </td>
             </tr>
         </>
